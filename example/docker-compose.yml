@@ -17,12 +17,15 @@ services:
     volumes:
       - ./proftpd/proftpd.conf:/usr/local/etc/proftpd.conf
       - data:/data
-      - ./proftpd/ssh:/etc/ssh
+      - ssh:/etc/ssh
+      - ./proftpd/entrypoint.sh:/entrypoint.sh
     ports:
       - "9920:20"
       - "9921:21"
       - "2222:22"
       - "60000-60100:60000-60100"
+    entrypoint: ['sh', '/entrypoint.sh' ]
+    command: ["/usr/local/sbin/proftpd", "-n", "-c", "/usr/local/etc/proftpd.conf" ]
     depends_on:
       - db
 
