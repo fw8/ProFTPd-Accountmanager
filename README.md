@@ -1,5 +1,13 @@
 # ProFTPd-Accountmanager
 
-Setup:
+Run example:
 
-docker run --rm -it -v $PWD/ui:/app composer require slim/slim slim/psr7 php-di/php-di
+    $ cd example
+    $ docker run --rm -it -v $PWD/ui:/app composer install
+    $ docker-compose up
+
+Open Browser on http://localhost
+
+Create new account
+
+Login to new account with an sftp-client on <sftp://localhost:2222>
