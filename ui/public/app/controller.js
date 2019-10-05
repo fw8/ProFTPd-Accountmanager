@@ -21,9 +21,7 @@ Ext.define('app.controller', {
       closable: false,
       modal: true,
 
-      //controller: me,
       controller: 'accounts',
-//      viewModel: vm,
 
       items: [
         {
