@@ -1,0 +1,52 @@
+version: "3.1"
+
+services:
+
+  db:
+    image: mariadb:10.3
+    volumes:
+      - ./db/proftpd.sql:/docker-entrypoint-initdb.d/proftpd.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=0Goc02oC
+      - MYSQL_DATABASE=proftpd
+      - MYSQL_USER=proftpd
+      - MYSQL_PASSWORD=NFvFPGht
+
+  proftpd:
+    image: pockost/proftpd
+    volumes:
+      - ./proftpd/proftpd.conf:/usr/local/etc/proftpd.conf
+      - data:/data
+      - ./proftpd/ssh:/etc/ssh
+    ports:
+      - "9920:20"
+      - "9921:21"
+      - "2222:22"
+      - "60000-60100:60000-60100"
+    depends_on:
+      - db
+
+  caddy:
+    image: abiosoft/caddy:php-no-stats
+    ports:
+        - "80:80"
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_DATABASE=proftpd
+      - MYSQL_USER=proftpd
+      - MYSQL_PASSWORD=NFvFPGht
+    volumes:
+      - ./caddy/Caddyfile:/etc/Caddyfile
+      - ../ui:/srv
+    depends_on:
+      - db
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  data:
+  ssh:

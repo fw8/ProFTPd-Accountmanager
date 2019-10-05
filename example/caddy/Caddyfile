@@ -1,0 +1,19 @@
+:80
+gzip
+root /srv/public
+
+fastcgi / 127.0.0.1:9000 php
+on startup php-fpm7
+
+rewrite {
+  if {path} match ^\/accounts
+  to {path} {path}/ /app.php?{query}
+}
+
+header / {
+  -Server
+  -x-powered-by
+}
+
+log stdout
+errors stdout
