@@ -28,26 +28,6 @@ Ext.define('app.views.accountspanel', {
             click: 'onAdd'
           },
         },
-        {
-          xtype: 'button',
-          text: 'Passwort ändern',
-          listeners: {
-            click: 'onChangePassword'
-          },
-          bind: {
-            disabled: '{!accountsgrid.selection}'
-          }
-        },
-        {
-          xtype: 'button',
-          text: 'Löschen',
-          listeners: {
-            click: 'onDelete'
-          },
-          bind: {
-            disabled: '{!accountsgrid.selection}'
-          }
-        }
       ]
     }
   ],

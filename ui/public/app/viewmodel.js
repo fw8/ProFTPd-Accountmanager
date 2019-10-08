@@ -8,7 +8,7 @@ Ext.define('app.viewmodel', {
       storeId: 'accounts',
       fields: [
         { name: 'userid' },
-        { name: 'status' },
+        { name: 'enabled', type: 'boolean' },
         { name: 'last_accessed', type: 'date', dateFormat: 'Y-m-d H:i:s' }
       ],
       proxy: {
@@ -17,6 +17,10 @@ Ext.define('app.viewmodel', {
         reader: {
           type: 'json',
           rootProperty: 'data'
+        },
+        writer : {
+          type: 'json',
+          writeAllFields: true
         },
       },
       autoLoad: true,

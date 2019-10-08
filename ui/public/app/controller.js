@@ -126,28 +126,6 @@ Ext.define('app.controller', {
     window.hide();
   },
 
-  onDelete: function (button, e, options) {
-    var view = this.getView(),
-        record = this.getSelectedRecord(),
-        store = this.getStore('accounts');
-
-    if (records.length){
-      Ext.Msg.show({
-        title:'Löschen?',
-        message: 'Soll der Account wirklich gelöscht werden?',
-        buttons: Ext.Msg.YESNO,
-        icon: Ext.Msg.QUESTION,
-        fn: function (buttonId) {
-          if (buttonId == 'yes'){
-            store.remove(record);
-            store.sync();
-            //App.util.Util.showToast('Kontakt erfolgreich gelöscht.');
-          }
-        }
-      });
-    }
-  },
-
   // get the currently selected record from accountsgrid
   getSelectedRecord: function() {
     var grid = this.lookupReference('accountsgrid');

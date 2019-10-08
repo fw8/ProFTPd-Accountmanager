@@ -10,7 +10,7 @@ CREATE TABLE users (
   `shell` VARCHAR(16) NOT NULL DEFAULT '/bin/false',
   `count` INT(11) NOT NULL DEFAULT '0',
   `last_accessed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `status` enum('enabled','disabled','deleted') NOT NULL DEFAULT 'enabled',
+  `enabled` BOOLEAN NOT NULL DEFAULT true,
   PRIMARY KEY (`id`)
 );
 CREATE INDEX users_userid_idx ON users (userid);

@@ -22,6 +22,14 @@ class AccountController
     return $response->withHeader('Content-Type', 'application/json');
   }
 
+  public function getone(Request $request, Response $response)
+  {
+    $id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
+    $users = $this->db->prepare("SELECT * FROM users WHERE id=:id")->execute(['id' => $id]);
+    $response->getBody()->write(json_encode(['success' => true, 'data' => $users]));
+    return $response->withHeader('Content-Type', 'application/json');
+  }
+
   public function create(Request $request, Response $response)
   {
     $data = $request->getParsedBody();
@@ -33,6 +41,26 @@ class AccountController
     if ($res) {
       $id = $this->db->lastInsertId();
       $response->getBody()->write(json_encode([ 'success' => true, 'data' => ['id' => $id]]));
+    } else {
+      $response->getBody()->write(json_encode([ 'success' => false, 'message' => "irgendwas ist schief gelaufen..."]));
+    }
+    return $response->withHeader('Content-Type', 'application/json');
+  }
+
+  public function update(Request $request, Response $response, array $args)
+  {
+    $id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
+    //$data = $request->getParsedBody();
+    // expect Content-Type: application/json
+    // for some reason getParsedBody() fails to decode json
+    // maybe some middleware required?
+    $data = json_decode($request->getBody()->getContents(), true);
+    $enabled = filter_var($data['enabled'], FILTER_VALIDATE_BOOLEAN);
+    $enabled = ($enabled) ? 1 : 0;
+    $res = $this->db->prepare("UPDATE users SET enabled=:enabled WHERE id=:id")->execute(['enabled' => $enabled,'id' => $id]);
+
+    if ($res) {
+      $response->getBody()->write(json_encode([ 'success' => true, 'data' => $data]));
     } else {
       $response->getBody()->write(json_encode([ 'success' => false, 'message' => "irgendwas ist schief gelaufen..."]));
     }

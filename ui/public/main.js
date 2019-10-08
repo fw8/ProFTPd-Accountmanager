@@ -5,21 +5,19 @@ Ext.require([
   'app.views.accountsgrid',
 ]);
 
-Ext.onReady(function () {
-  var main;
+Ext.application({
+  name: 'ProFTPd-Accountmanager',
+  appFolder: 'app',
 
-  main = Ext.create('Ext.container.Container', {
-    padding: '20 20 20 20',
-    layout: 'fit',
-    renderTo: document.body,
-    layout: {
-      type: 'vbox',
-      align: 'stretch'
-    },
-    items: [{
-      xtype: 'accountspanel',
-    }]
-  });
+  launch: function () {
+    main = Ext.create('Ext.container.Container', {
+      padding: '20 20 20 20',
+      plugins: 'viewport',
+
+      items: [{
+        xtype: 'accountspanel',
+      }]
+    });
 
   // Reload store every minute
   var store = main.down('accountspanel').getViewModel().getStore('accounts');
@@ -31,5 +29,5 @@ Ext.onReady(function () {
       },
       interval: 60000
     });
-
+  }
 });
