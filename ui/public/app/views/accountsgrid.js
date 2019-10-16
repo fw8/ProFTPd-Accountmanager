@@ -13,7 +13,7 @@ Ext.define('app.views.accountsgrid', {
 
   viewConfig: {
     markDirty: false,
-    overItemCls: '',
+ //   overItemCls: '',
   },
 
   columns: [
@@ -49,6 +49,7 @@ Ext.define('app.views.accountsgrid', {
       items: [{
         iconCls: 'x-fa fa-key',
         tooltip: 'Passwort ändern',
+        handler: 'onSetPassword',
       },{
         iconCls: 'x-fa fa-trash',
         tooltip: 'Löschen',

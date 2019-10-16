@@ -4,20 +4,21 @@ CREATE TABLE users (
   `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `userid` VARCHAR(32) NOT NULL DEFAULT '',
   `passwd` VARCHAR(32) NOT NULL DEFAULT '',
-  `uid` SMALLINT(6) NOT NULL DEFAULT '5500',
-  `gid` SMALLINT(6) NOT NULL DEFAULT '5500',
+  `uid` SMALLINT(6) NOT NULL DEFAULT '1000',
+  `gid` SMALLINT(6) NOT NULL DEFAULT '1000',
   `homedir` VARCHAR(255) NOT NULL DEFAULT '',
   `shell` VARCHAR(16) NOT NULL DEFAULT '/bin/false',
   `count` INT(11) NOT NULL DEFAULT '0',
   `last_accessed` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   `enabled` BOOLEAN NOT NULL DEFAULT true,
+  `deleted` BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (`id`)
 );
 CREATE INDEX users_userid_idx ON users (userid);
 
 CREATE TABLE groups (
     groupname VARCHAR(30) NOT NULL DEFAULT '',
-    gid SMALLINT(6) NOT NULL DEFAULT '5500',
+    gid SMALLINT(6) NOT NULL DEFAULT '1000',
     members VARCHAR(255) NOT NULL DEFAULT ''
 );
 CREATE INDEX groups_gid_idx ON groups (gid);

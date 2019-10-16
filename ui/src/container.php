@@ -15,6 +15,7 @@ $container->set('settings', function ($c) {
             'dbname' => getenv('MYSQL_DATABASE'),
             'charset' => 'utf8mb4',
         ],
+        'ftp_data_dir' => getenv('FTP_DATA_DIR'),
     ];
 });
 

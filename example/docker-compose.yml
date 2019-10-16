@@ -38,6 +38,7 @@ services:
       - MYSQL_DATABASE=proftpd
       - MYSQL_USER=proftpd
       - MYSQL_PASSWORD=NFvFPGht
+      - FTP_DATA_DIR=/data
     volumes:
       - ./caddy/Caddyfile:/etc/Caddyfile
       - ../ui:/srv

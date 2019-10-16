@@ -132,4 +132,8 @@ Ext.define('app.controller', {
     return grid.getSelectionModel().getSelection();
   },
 
+  onSetPassword: function(grid, rowIndex, colIndex) {
+    var rec = grid.getStore().getAt(rowIndex);
+  },
+
 });
