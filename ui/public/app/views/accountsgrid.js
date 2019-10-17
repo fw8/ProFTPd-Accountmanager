@@ -42,6 +42,7 @@ Ext.define('app.views.accountsgrid', {
       text: 'Letzter Zugriff', dataIndex: 'last_accessed',
       flex: 1
     },
+    { text: 'Größe', dataIndex: 'du', renderer: function(value, record){ return (value.fileSize(1)) }},
     {
       xtype: 'actioncolumn',
       text: "Aktion",

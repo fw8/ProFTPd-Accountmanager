@@ -9,7 +9,8 @@ Ext.define('app.viewmodel', {
       fields: [
         { name: 'userid' },
         { name: 'enabled', type: 'boolean' },
-        { name: 'last_accessed', type: 'date', dateFormat: 'Y-m-d H:i:s' }
+        { name: 'last_accessed', type: 'date', dateFormat: 'Y-m-d H:i:s' },
+        { name: 'du', type: 'int' }
       ],
       proxy: {
         type: 'rest',
