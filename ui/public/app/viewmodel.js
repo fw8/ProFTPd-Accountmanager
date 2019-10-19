@@ -26,6 +26,31 @@ Ext.define('app.viewmodel', {
       },
       autoLoad: true,
     },
-  },
+
+    transfer_history: {
+      storeId: 'transfer_history',
+      fields: [
+        { name: 'userid' },
+        { name: 'client_ip' },
+        { name: 'protocol' },
+        { name: 'command' },
+        { name: 'filename' },
+        { name: 'bytes', type: 'int' },
+        { name: 'transfer_date', type: 'date', dateFormat: 'Y-m-d H:i:s' },
+      ],
+      leadingBufferZone: 300,
+      pageSize: 100,
+      autoLoad: false,
+      proxy: {
+        type: 'ajax',
+        url: '/accounts/0/history/transfer',
+        reader: {
+          type: 'json',
+          rootProperty: 'data',
+          totalProperty: 'total'
+        },
+      }
+    }
+  }
 
 });

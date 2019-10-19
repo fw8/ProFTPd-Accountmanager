@@ -3,6 +3,7 @@ Ext.require([
   'app.viewmodel',
   'app.views.accountspanel',
   'app.views.accountsgrid',
+  'app.views.transferhistorygrid',
 ]);
 
 // Prototype to convert a number to a readable string respecting the new international standards.

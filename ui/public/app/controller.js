@@ -136,4 +136,9 @@ Ext.define('app.controller', {
     var rec = grid.getStore().getAt(rowIndex);
   },
 
+  doLoadTransferHistory: function(grid, rec, colIndex) {
+    var store = this.getViewModel().getStore('transfer_history');
+    store.getProxy().url = '/accounts/'+rec.id+'/history/transfer';
+    store.reload();
+  },
 });

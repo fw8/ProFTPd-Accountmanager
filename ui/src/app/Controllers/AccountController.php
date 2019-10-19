@@ -33,6 +33,33 @@ class AccountController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
+    // GET /accounts/{id}/history/transfer
+    public function transfer_history(Request $request, Response $response, array $args)
+    {
+        $id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
+        $params = $request->getQueryParams();
+        $start = (int)filter_var($params['start'], FILTER_SANITIZE_NUMBER_INT,['options' => ['default' => 0]]);
+        $limit = (int)filter_var($params['limit'], FILTER_SANITIZE_NUMBER_INT,['options' => ['default' => 0]]);
+
+        $stmt = $this->db->prepare("SELECT userid FROM users WHERE id=:id");
+        $stmt->execute(['id' => $id]);
+        $res = $stmt->fetch();
+        $userid = $res['userid'];
+
+        $stmt = $this->db->prepare("SELECT COUNT(*) AS total FROM transfer_history WHERE userid=:userid");
+        $stmt->execute(['userid' => $userid]);
+        $res = $stmt->fetch();
+        $total = $res['total'];
+
+        $stmt = $this->db->prepare("SELECT * FROM transfer_history WHERE userid=:userid LIMIT $limit OFFSET $start");
+        $stmt->execute([ 'userid' => $userid ]);
+        $res = $stmt->fetchAll();
+
+        $response->getBody()->write(json_encode(['success' => true, 'data' => $res, 'total' => $total]));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+
     public function create(Request $request, Response $response)
     {
         $data = $request->getParsedBody();

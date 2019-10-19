@@ -35,7 +35,7 @@ Ext.define('app.views.accountsgrid', {
       },
     },
     { text: 'Name', dataIndex: 'userid', width: 200 },
-    { text: 'Zugriffe', dataIndex: 'count' },
+    { text: 'Anmeldungen', dataIndex: 'count' },
     {
       xtype: 'datecolumn',
       format: 'd.m.Y H:i:s',
@@ -73,4 +73,7 @@ Ext.define('app.views.accountsgrid', {
       }]
     },
   ],
+  listeners: {
+    select: 'doLoadTransferHistory',
+  },
 });
