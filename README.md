@@ -1,5 +1,9 @@
 # ProFTPd-Accountmanager
 
+**ATTENTION**
+This is "work in progress"... It may not work as expected at the moment
+
+
 Run example:
 
     $ cd example
