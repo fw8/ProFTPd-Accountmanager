@@ -25,5 +25,6 @@ foreach($res as $row) {
     system('rm -fr '.$homedir);
   }
   $res = $pdo->prepare("DELETE FROM users WHERE id=:id")->execute(['id' => $id]);
+  $res = $pdo->prepare("DELETE FROM transfer_history WHERE userid=:userid")->execute(['userid' => $userid]);
 }
 

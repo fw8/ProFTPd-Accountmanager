@@ -31,12 +31,17 @@ Ext.application({
     });
 
   // Reload store every minute
-  var store = main.down('accountspanel').getViewModel().getStore('accounts');
+  var accounts_store = main.down('accountspanel').getViewModel().getStore('accounts'),
+      transfer_store = main.down('accountspanel').getViewModel().getStore('transfer_history');
+
   var runner = new Ext.util.TaskRunner(),
     task = runner.start({
       run: function () {
-        store.reload();
-        console.log("store reloaded");
+        accounts_store.reload();
+        if (transfer_store.getProxy().getUrl() != 'none') {
+          transfer_store.reload();
+        }
+        //console.log("store reloaded");
       },
       interval: 60000
     });

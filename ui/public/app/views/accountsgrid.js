@@ -54,23 +54,9 @@ Ext.define('app.views.accountsgrid', {
       },{
         iconCls: 'x-fa fa-trash',
         tooltip: 'Löschen',
-        handler: function(grid, rowIndex, colIndex) {
-          var rec = grid.getStore().getAt(rowIndex);
-          Ext.Msg.show({
-            title: 'Löschen?',
-            message: 'Soll der Account wirklich gelöscht werden?',
-            buttons: Ext.Msg.YESNO,
-            icon: Ext.Msg.QUESTION,
-            fn: function (buttonId) {
-              if (buttonId == 'yes') {
-                rec.store.remove(rec);
-                rec.store.sync();
-                //App.util.Util.showToast('Kontakt erfolgreich gelöscht.');
-              }
-            }
-          });
+        handler: 'onAccountRemove',
         },
-      }]
+      ]
     },
   ],
   listeners: {

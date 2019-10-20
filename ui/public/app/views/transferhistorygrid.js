@@ -6,12 +6,9 @@ Ext.define('app.views.transferhistorygrid', {
 
   bind: '{transfer_history}',
 
+  height: 400,
+  collapsible: true,
   loadMask: true,
-
-  layout: {
-    type: 'vbox',
-    align: 'stretch'
-  },
 
   viewConfig: {
     trackOver: false
@@ -23,7 +20,7 @@ Ext.define('app.views.transferhistorygrid', {
     {
       xtype: 'datecolumn',
       format: 'd.m.Y H:i:s',
-      text: 'Letzter Zugriff',
+      text: 'Zeitpunkt',
       width: 150,
       dataIndex: 'transfer_date',
     },

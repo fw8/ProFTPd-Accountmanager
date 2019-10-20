@@ -34,12 +34,21 @@ class AccountController
     }
 
     // GET /accounts/{id}/history/transfer
+    // ?start=0&limit=10&sort=[{"property":"transfer_date","direction":"ASC"}]
     public function transfer_history(Request $request, Response $response, array $args)
     {
         $id = filter_var($args['id'], FILTER_SANITIZE_NUMBER_INT);
         $params = $request->getQueryParams();
         $start = (int)filter_var($params['start'], FILTER_SANITIZE_NUMBER_INT,['options' => ['default' => 0]]);
         $limit = (int)filter_var($params['limit'], FILTER_SANITIZE_NUMBER_INT,['options' => ['default' => 0]]);
+        if (array_key_exists('sort', $params)) { // TODO: add more sanity checks
+            $sort = json_decode($params['sort'], true);
+            $sort_property = $sort[0]['property'];
+            $sort_direction = $sort[0]['direction'];
+        } else {
+            $sort_property = 'transfer_date';
+            $sort_direction = 'DESC';
+        }
 
         $stmt = $this->db->prepare("SELECT userid FROM users WHERE id=:id");
         $stmt->execute(['id' => $id]);
@@ -51,7 +60,7 @@ class AccountController
         $res = $stmt->fetch();
         $total = $res['total'];
 
-        $stmt = $this->db->prepare("SELECT * FROM transfer_history WHERE userid=:userid LIMIT $limit OFFSET $start");
+        $stmt = $this->db->prepare("SELECT * FROM transfer_history WHERE userid=:userid ORDER BY $sort_property $sort_direction LIMIT $limit OFFSET $start");
         $stmt->execute([ 'userid' => $userid ]);
         $res = $stmt->fetchAll();
 
