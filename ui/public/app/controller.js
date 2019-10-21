@@ -138,7 +138,7 @@ Ext.define('app.controller', {
         if (buttonId == 'yes') {
           var transfer_store = me.getViewModel().getStore('transfer_history');
           transfer_store.clearData();
-          transfer_store.getProxy.setUrl('none');
+          transfer_store.getProxy().setUrl('none');
           rec.store.remove(rec);
           rec.store.sync();
           //App.util.Util.showToast('Kontakt erfolgreich gelöscht.');
