@@ -39,7 +39,7 @@ Ext.define('app.views.accountsgrid', {
     {
       xtype: 'datecolumn',
       format: 'd.m.Y H:i:s',
-      text: 'Letzter Zugriff', dataIndex: 'last_accessed',
+      text: 'Letzte Anmeldung', dataIndex: 'last_accessed',
       flex: 1
     },
     { text: 'Größe', dataIndex: 'du', renderer: function(value, record){ return (value.fileSize(1)) }},
