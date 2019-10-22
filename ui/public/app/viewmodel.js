@@ -10,7 +10,14 @@ Ext.define('app.viewmodel', {
         { name: 'userid' },
         { name: 'enabled', type: 'boolean' },
         { name: 'last_accessed', type: 'date', dateFormat: 'Y-m-d H:i:s' },
-        { name: 'du', type: 'int' }
+        { name: 'du', type: 'int' },
+        { name: 'df', type: 'int' },
+        { name: 'usage',
+          type: 'float',
+          convert: function(val,row) {
+            return row.data.du / row.data.df;
+          }
+        },
       ],
       proxy: {
         type: 'rest',

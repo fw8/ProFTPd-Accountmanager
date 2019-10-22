@@ -13,7 +13,7 @@ Ext.define('app.views.accountsgrid', {
 
   viewConfig: {
     markDirty: false,
- //   overItemCls: '',
+    overItemCls: '',
   },
 
   columns: [
@@ -34,12 +34,21 @@ Ext.define('app.views.accountsgrid', {
         rec.store.sync();
       },
     },
-    { text: 'Name', dataIndex: 'userid', width: 200 },
+    { text: 'Account', dataIndex: 'userid', width: 200 },
     { text: 'Anmeldungen', dataIndex: 'count' },
     {
       xtype: 'datecolumn',
       format: 'd.m.Y H:i:s',
       text: 'Letzte Anmeldung', dataIndex: 'last_accessed',
+      width: 150,
+    },
+    { xtype: 'widgetcolumn',
+      text: 'Plattenbelegung',
+      dataIndex: 'usage',
+      widget: {
+        xtype: 'progressbarwidget',
+        textTpl: '{value:percent}'
+      },
       flex: 1
     },
     { text: 'Größe', dataIndex: 'du', renderer: function(value, record){ return (value.fileSize(1)) }},
