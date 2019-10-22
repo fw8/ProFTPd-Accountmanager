@@ -25,26 +25,21 @@ Ext.define('app.views.transferhistorygrid', {
       dataIndex: 'transfer_date',
     },
     {
-      xtype: 'actioncolumn',
       text: 'Aktion',
-      //align: 'center',
       width: 70,
       dataIndex: 'command',
-      menuDisabled: true,
-      getClass: function (val, meta, rec) {
-        return {
-          'RETR': 'x-fa fa-upload',
-          'STOR': 'x-fa fa-download',
-          'DELE': 'x-fa fa-trash',
-        }[val];
-      },
       renderer: function(val) {
         color = {
           'RETR': 'green',
           'STOR': 'orange',
           'DELE': 'red',
         }[val];
-        return '<div style="float:right; font-size: 13px; line-height: 1em; color: '+color+';">' + val + '</div>' // TDOD: better put style into css file
+        icon = {
+          'RETR': 'x-fa fa-upload',
+          'STOR': 'x-fa fa-download',
+          'DELE': 'x-fa fa-trash',
+        }[val];
+        return '<div class="'+icon+'"style=" color: '+color+';">&nbsp;' + val + '</div>'
       },
     },
     { text: 'Datei', dataIndex: 'filename', flex: 1 },
