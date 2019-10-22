@@ -11,7 +11,8 @@ Ext.define('app.views.transferhistorygrid', {
   loadMask: true,
 
   viewConfig: {
-    trackOver: false
+    trackOver: false,
+    emptyText: 'Keine Einträge gefunden'
   },
 
   title: "Transfers",
