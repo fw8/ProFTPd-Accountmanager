@@ -15,7 +15,7 @@ Ext.define('app.views.accountspanel', {
 
   items: [
     { xtype: 'accountsgrid', flex: 1 },
-    { xtype: 'transferhistorygrid', flex: 1 }
+    { xtype: 'transferhistorygrid', flex: 1, margin: "10 0 0 0" }
   ],
   dockedItems: [
     {
