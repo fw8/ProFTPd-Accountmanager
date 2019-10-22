@@ -21,12 +21,19 @@ foreach($res as $row) {
   if (file_exists($homedir)) {
     echo "calculating disk usage of ".$homedir."\n";
     $io = popen ( '/usr/bin/du -sk ' . $homedir, 'r' );
-    $size = fgets ( $io, 4096);
-    $size = (int) substr ( $size, 0, strpos ( $size, "\t" ) );
+    $du = fgets ( $io, 4096);
+    $du = (int) substr ( $du, 0, strpos ( $du, "\t" ) );
     pclose ( $io );
-    $bytes = intval($size)*1024; // Size in bytes
-    echo "size of ".$homedir." is ".$bytes." bytes\n";
-    $res = $pdo->prepare("UPDATE users SET du=:du WHERE id=:id")->execute(['du' => $bytes, 'id' => $id]);
+    $du = intval($du)*1024; // Size in bytes
+    echo "size of ".$homedir." is ".$du." bytes\n";
+
+    $io = popen ( '/bin/df -B 1 /data/', 'r' );
+    $df = fgets ( $io, 4096); // eat first line with heading
+    $df = fgets ( $io, 4096);
+    $df = explode(" ",preg_replace('/\s+/', ' ', $df))[1];
+    pclose ( $io );
+    $df = intval($df);
+    $res = $pdo->prepare("UPDATE users SET du=:du, df=:df WHERE id=:id")->execute(['du' => $du, 'df' => $df, 'id' => $id]);
   }
 }
 
