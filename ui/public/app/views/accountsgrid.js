@@ -34,7 +34,7 @@ Ext.define('app.views.accountsgrid', {
         rec.store.sync();
       },
     },
-    { text: 'Account', dataIndex: 'userid', width: 200 },
+    { text: 'Account', dataIndex: 'id', width: 200 },
     { text: 'Anmeldungen', dataIndex: 'count' },
     {
       xtype: 'datecolumn',

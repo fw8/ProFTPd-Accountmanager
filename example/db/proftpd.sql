@@ -1,8 +1,7 @@
 use proftpd;
 
 CREATE TABLE users (
-  id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  userid VARCHAR(32) NOT NULL DEFAULT '',
+  id VARCHAR(32) NOT NULL DEFAULT '' UNIQUE,
   passwd VARCHAR(32) NOT NULL DEFAULT '',
   uid SMALLINT(6) NOT NULL DEFAULT '1000',
   gid SMALLINT(6) NOT NULL DEFAULT '1000',
@@ -11,11 +10,12 @@ CREATE TABLE users (
   count INT(11) NOT NULL DEFAULT '0',
   last_accessed datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   du BIGINT(20) NOT NULL DEFAULT '0',
+  df BIGINT(20) NOT NULL DEFAULT '0',
   enabled BOOLEAN NOT NULL DEFAULT true,
   deleted BOOLEAN NOT NULL DEFAULT false,
   PRIMARY KEY (id)
 );
-CREATE INDEX users_userid_idx ON users (userid);
+CREATE INDEX users_id_idx ON users (id);
 
 CREATE TABLE groups (
   groupname VARCHAR(32) NOT NULL DEFAULT '',
@@ -27,7 +27,7 @@ INSERT INTO groups (groupname, gid, members) VALUES ('nogroup', 1000, '');
 
 
 CREATE TABLE login_history (
-  userid VARCHAR(32) NOT NULL,
+  id VARCHAR(32) NOT NULL,
   client_ip VARCHAR(45) NOT NULL,
   server_ip VARCHAR(45) NOT NULL,
   protocol VARCHAR(10) NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE login_history (
 );
 
 CREATE TABLE transfer_history (
-  userid VARCHAR(32) NOT NULL,
+  id VARCHAR(32) NOT NULL,
   client_ip VARCHAR(45) NOT NULL,
   protocol VARCHAR(10) NOT NULL,
   command VARCHAR(10) NOT NULL,

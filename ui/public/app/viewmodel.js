@@ -7,11 +7,13 @@ Ext.define('app.viewmodel', {
     accounts: {
       storeId: 'accounts',
       fields: [
-        { name: 'userid' },
+        { name: 'id' },
         { name: 'enabled', type: 'boolean' },
+        { name: 'count', type: 'int' },
         { name: 'last_accessed', type: 'date', dateFormat: 'Y-m-d H:i:s' },
         { name: 'du', type: 'int' },
         { name: 'df', type: 'int' },
+        { name: 'deleted', type: 'bool' },
         { name: 'usage',
           type: 'float',
           convert: function(val,row) {
@@ -19,12 +21,17 @@ Ext.define('app.viewmodel', {
           }
         },
       ],
+      filters: {
+        property: 'deleted',
+        value: false,
+        operator: '=='
+      },
       proxy: {
         type: 'rest',
         url: '/accounts',
         reader: {
           type: 'json',
-          rootProperty: 'data'
+          rootProperty: 'data',
         },
         writer : {
           type: 'json',
@@ -37,7 +44,7 @@ Ext.define('app.viewmodel', {
     transfer_history: {
       storeId: 'transfer_history',
       fields: [
-        { name: 'userid' },
+        { name: 'id' },
         { name: 'client_ip' },
         { name: 'protocol' },
         { name: 'command' },

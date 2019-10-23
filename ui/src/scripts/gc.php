@@ -17,14 +17,13 @@ $res = $pdo->query("SELECT * FROM users WHERE deleted = TRUE")->fetchAll();
 
 foreach($res as $row) {
   $id = $row['id'];
-  $userid = $row['userid'];
   $homedir = $row['homedir'];
-  echo "deleting account ".$userid." with homedir ".$homedir."\n";
+  echo "deleting account '".$id."' with homedir '".$homedir."'\n";
   if (file_exists($homedir)) {
-    echo "deleting directory ".$homedir." recursively\n";
+    echo "deleting directory '".$homedir."' recursively\n";
     system('rm -fr '.$homedir);
   }
   $res = $pdo->prepare("DELETE FROM users WHERE id=:id")->execute(['id' => $id]);
-  $res = $pdo->prepare("DELETE FROM transfer_history WHERE userid=:userid")->execute(['userid' => $userid]);
+  $res = $pdo->prepare("DELETE FROM transfer_history WHERE id=:id")->execute(['id' => $id]);
 }
 

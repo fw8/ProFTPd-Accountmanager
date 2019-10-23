@@ -34,17 +34,35 @@ Ext.define('app.controller', {
             msgTarget: 'side',
             labelWidth: 80
           },
+
+          viewModel: {
+            stores: {
+              accounts: {
+                fields: [ { name: 'id' } ],
+                proxy: {
+                  type: 'ajax',
+                  url: '/accounts',
+                  reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                  },
+                },
+                autoLoad: true
+              },
+            },
+          },
+
           items: [
             {
-              name: 'userid',
+              name: 'id',
               fieldLabel: 'Name',
               allowBlank: false,
               enableKeyEvents: true,
               maskRe:/[0-9a-z_]/,    // no spaces, no special chars
-              // force uniq userid
+              // force uniq id
               validator: function (fieldVal) {
-                var store = Ext.StoreMgr.lookup('accounts'),
-                  i = store.findExact('userid', fieldVal);
+                var store = this.up().getViewModel().getStore('accounts');
+                i = store.findExact('id', fieldVal);
                 if (i < 0) {
                   return true;
                 } else {
@@ -102,7 +120,7 @@ Ext.define('app.controller', {
         form = window.down('form'),
         values = form.getValues();
 
-    // get userid and password from form fields
+    // get id and password from form fields
 
     if (form.isValid()) {
       Ext.Ajax.request({
@@ -139,7 +157,8 @@ Ext.define('app.controller', {
           var transfer_store = me.getViewModel().getStore('transfer_history');
           transfer_store.clearData();
           transfer_store.getProxy().setUrl('none');
-          rec.store.remove(rec);
+          rec.set('deleted', true);
+          //rec.store.remove(rec);
           rec.store.sync();
           //App.util.Util.showToast('Kontakt erfolgreich gelöscht.');
         }
@@ -155,8 +174,87 @@ Ext.define('app.controller', {
   },
 
   onSetPassword: function(grid, rowIndex, colIndex) {
-    var rec = grid.getStore().getAt(rowIndex);
-  },
+      var me = this,
+          rec = grid.getStore().getAt(rowIndex),
+          window,
+          rootContainer = this.getView().up(),
+          vm = this.getViewModel();
+
+      window = Ext.create('Ext.window.Window', {
+
+        title: 'Neues Passwort',
+
+        width: 310,
+
+        layout: {
+          type: 'fit'
+        },
+
+        closable: false,
+        modal: true,
+
+        controller: 'accounts',
+
+        items: [
+          {
+            xtype: 'form',
+            bodyPadding: 5,
+
+            defaults: {
+              xtype: 'textfield',
+              anchor: '100%',
+              msgTarget: 'side',
+              labelWidth: 80
+            },
+            items: [
+              {
+                name: 'id',
+                fieldLabel: 'Name',
+              },
+              {
+                fieldLabel: 'Password',
+                name: 'passwd',
+                allowBlank: false,
+                maskRe:/[^ ]/,  // everything but blanks
+                inputType : 'password',
+              },
+            ]
+          }
+        ],
+        dockedItems: [
+          {
+            xtype: 'toolbar',
+            dock: 'bottom',
+            ui: 'footer',
+            layout: {
+              pack: 'end',
+              type: 'hbox'
+            },
+            items: [
+              {
+                xtype: 'button',
+                text: 'Speichern',
+                formBind: true,
+                listeners: {
+                  click: 'onSave'
+                }
+              },
+              {
+                xtype: 'button',
+                text: 'Abbrechen',
+                listeners: {
+                  click: function (button, e, options) {
+                    Ext.destroy(button.up('window'));
+                  },
+                }
+              }
+            ]
+          }
+        ],
+      });
+
+      window.show();
+    },
 
   doLoadTransferHistory: function(grid, rec, colIndex) {
     var store = this.getViewModel().getStore('transfer_history');

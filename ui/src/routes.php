@@ -14,5 +14,3 @@ $app->get('/accounts/{id}/history/transfer', AccountController::class . ':transf
 $app->post('/accounts', AccountController::class . ':create');
 
 $app->put('/accounts/{id}', AccountController::class . ':update');
-
-$app->delete('/accounts/{id}', AccountController::class . ':delete');
