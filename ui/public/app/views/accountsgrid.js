@@ -6,11 +6,6 @@ Ext.define('app.views.accountsgrid', {
 
   bind: '{accounts}',
 
-  layout: {
-    type: 'vbox',
-    align: 'stretch'
-  },
-
   viewConfig: {
     markDirty: false,
     overItemCls: '',
