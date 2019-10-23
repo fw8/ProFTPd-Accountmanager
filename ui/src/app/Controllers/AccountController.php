@@ -16,6 +16,8 @@ class AccountController
         $this->ftp_data_dir = $c->get('settings')['ftp_data_dir'];
     }
 
+    // *** GET all accounts ***
+    // GET /accounts
     public function getall(Request $request, Response $response)
     {
         $users = $this->db->query("SELECT id,enabled,count,last_accessed,du,df,deleted FROM users")->fetchAll();
@@ -23,6 +25,8 @@ class AccountController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
+    // *** GET single account ***
+    // GET /accounts/{id}
     public function getone(Request $request, Response $response, array $args)
     {
         $id = filter_var($args['id'], FILTER_SANITIZE_STRING);
@@ -33,6 +37,7 @@ class AccountController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
+    // *** GET Transferhistory ***
     // GET /accounts/{id}/history/transfer
     // ?start=0&limit=10&sort=[{"property":"transfer_date","direction":"ASC"}]
     public function transfer_history(Request $request, Response $response, array $args)
@@ -63,7 +68,11 @@ class AccountController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
-
+    // *** CREATE Account ***
+    // POST /accounts
+    // Params (application/x-www-form-urlencoded):
+    // id: xxx
+    // passwd: yyy
     public function create(Request $request, Response $response)
     {
         $data = $request->getParsedBody();
@@ -84,6 +93,9 @@ class AccountController
         return $response->withHeader('Content-Type', 'application/json');
     }
 
+    // *** UPDATE Accountfields 'enabled' and 'deleted' ***
+    // PUT /accounts/{id}
+    // Params (json): { "enabled": value, "deleted": value }
     public function update(Request $request, Response $response, array $args)
     {
         $id = filter_var($args['id'], FILTER_SANITIZE_STRING);
@@ -94,12 +106,35 @@ class AccountController
         $data = json_decode($request->getBody()->getContents(), true);
         $enabled = filter_var($data['enabled'], FILTER_VALIDATE_BOOLEAN);
         $deleted = filter_var($data['deleted'], FILTER_VALIDATE_BOOLEAN);
+
         $enabled = ($enabled) ? 1 : 0;
         $deleted = ($deleted) ? 1 : 0;
+
         $res = $this->db->prepare("UPDATE users SET enabled=:enabled, deleted=:deleted WHERE id=:id")->execute(['enabled' => $enabled, 'deleted' => $deleted, 'id' => $id]);
 
         if ($res) {
             $response->getBody()->write(json_encode(['success' => true, 'data' => $data]));
+        } else {
+            $response->getBody()->write(json_encode(['success' => false, 'message' => "irgendwas ist schief gelaufen..."]));
+        }
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    // *** UPDATE Password ***
+    // POST /accounts/{id}
+    // Params (application/x-www-form-urlencoded):
+    // id: xxx
+    // passwd: yyy
+    public function passwd(Request $request, Response $response, array $args)
+    {
+        $id = filter_var($args['id'], FILTER_SANITIZE_STRING);
+        $data = $request->getParsedBody();
+        $passwd = filter_var($data['passwd'], FILTER_SANITIZE_STRING);
+
+        $res = $this->db->prepare("UPDATE users SET passwd=ENCRYPT(:passwd) WHERE id=:id")->execute(['passwd' => $passwd, 'id' => $id,]);
+
+        if ($res) {
+            $response->getBody()->write(json_encode(['success' => true]));
         } else {
             $response->getBody()->write(json_encode(['success' => false, 'message' => "irgendwas ist schief gelaufen..."]));
         }

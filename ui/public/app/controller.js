@@ -95,7 +95,7 @@ Ext.define('app.controller', {
               text: 'Speichern',
               formBind: true,
               listeners: {
-                click: 'onSave'
+                click: 'onAddSave'
               }
             },
             {
@@ -115,7 +115,7 @@ Ext.define('app.controller', {
     window.show();
   },
 
-  onSave: function (button, e, options) {
+  onAddSave: function (button, e, options) {
     var window = button.up('window'),
         form = window.down('form'),
         values = form.getValues();
@@ -173,88 +173,131 @@ Ext.define('app.controller', {
     return grid.getSelectionModel().getSelection();
   },
 
+
   onSetPassword: function(grid, rowIndex, colIndex) {
-      var me = this,
-          rec = grid.getStore().getAt(rowIndex),
-          window,
-          rootContainer = this.getView().up(),
-          vm = this.getViewModel();
+    var me = this,
+        rec = grid.getStore().getAt(rowIndex),
+        window,
+        rootContainer = this.getView().up(),
+        vm = this.getViewModel();
 
-      window = Ext.create('Ext.window.Window', {
+    window = Ext.create('Ext.window.Window', {
 
-        title: 'Neues Passwort',
+      title: 'Neues Passwort',
 
-        width: 310,
+      width: 310,
 
-        layout: {
-          type: 'fit'
-        },
+      layout: {
+        type: 'fit'
+      },
 
-        closable: false,
-        modal: true,
+      closable: false,
+      modal: true,
 
-        controller: 'accounts',
+      controller: 'accounts',
 
-        items: [
-          {
-            xtype: 'form',
-            bodyPadding: 5,
+      viewModel: {
+        data: {
+          accountId: rec.id,
+        }
+      },
 
-            defaults: {
-              xtype: 'textfield',
-              anchor: '100%',
-              msgTarget: 'side',
-              labelWidth: 80
+      items: [
+        {
+          xtype: 'form',
+          bodyPadding: 5,
+
+          defaults: {
+            xtype: 'textfield',
+            anchor: '100%',
+            msgTarget: 'side',
+            labelWidth: 80
+          },
+          items: [
+            {
+              xtype: 'displayfield',
+              //name: 'id',
+              fieldLabel: 'Account',
+              bind: '{accountId}',
             },
-            items: [
-              {
-                name: 'id',
-                fieldLabel: 'Name',
-              },
-              {
-                fieldLabel: 'Password',
-                name: 'passwd',
-                allowBlank: false,
-                maskRe:/[^ ]/,  // everything but blanks
-                inputType : 'password',
-              },
-            ]
-          }
-        ],
-        dockedItems: [
-          {
-            xtype: 'toolbar',
-            dock: 'bottom',
-            ui: 'footer',
-            layout: {
-              pack: 'end',
-              type: 'hbox'
+            {
+              xtype: 'hiddenfield',
+              name: 'id',
+              bind: '{accountId}',
             },
-            items: [
-              {
-                xtype: 'button',
-                text: 'Speichern',
-                formBind: true,
-                listeners: {
-                  click: 'onSave'
-                }
-              },
-              {
-                xtype: 'button',
-                text: 'Abbrechen',
-                listeners: {
-                  click: function (button, e, options) {
-                    Ext.destroy(button.up('window'));
-                  },
-                }
+            {
+              fieldLabel: 'Password',
+              name: 'passwd',
+              allowBlank: false,
+              maskRe:/[^ ]/,  // everything but blanks
+              inputType : 'password',
+            },
+          ]
+        }
+      ],
+      dockedItems: [
+        {
+          xtype: 'toolbar',
+          dock: 'bottom',
+          ui: 'footer',
+          layout: {
+            pack: 'end',
+            type: 'hbox'
+          },
+          items: [
+            {
+              xtype: 'button',
+              text: 'Speichern',
+              formBind: true,
+              listeners: {
+                click: 'onSetPasswordSave'
               }
-            ]
-          }
-        ],
-      });
+            },
+            {
+              xtype: 'button',
+              text: 'Abbrechen',
+              listeners: {
+                click: function (button, e, options) {
+                  Ext.destroy(button.up('window'));
+                },
+              }
+            }
+          ]
+        }
+      ],
+    });
 
-      window.show();
-    },
+    window.show();
+  },
+
+  onSetPasswordSave: function (button, e, options) {
+    var window = button.up('window'),
+        form = window.down('form'),
+        values = form.getValues();
+
+    // get id and password from form fields
+
+    if (form.isValid()) {
+      Ext.Ajax.request({
+        url: '/accounts/'+values.id,
+        method: "POST",
+        params: values,
+
+        success: function (response, opts) {
+          var store = Ext.StoreMgr.lookup('accounts');
+          store.reload();
+          Ext.destroy(window);
+        },
+        failure: function (response, opts) {
+          console.log('server-side failure with status code ' + response.status);
+          Ext.destroy(window);
+        }
+
+      });
+    }
+
+    window.hide();
+  },
 
   doLoadTransferHistory: function(grid, rec, colIndex) {
     var store = this.getViewModel().getStore('transfer_history');
