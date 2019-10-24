@@ -41,7 +41,7 @@ services:
       - FTP_DATA_DIR=/data
     volumes:
       - ./caddy/Caddyfile:/etc/Caddyfile
-      - ../ui:/srv
+      - ../ui:/ui
     depends_on:
       - db
 
