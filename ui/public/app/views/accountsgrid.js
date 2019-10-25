@@ -29,7 +29,20 @@ Ext.define('app.views.accountsgrid', {
         rec.store.sync();
       },
     },
-    { text: 'Account', dataIndex: 'id', width: 200 },
+    {
+      text: 'Account',
+      dataIndex: 'sortname',
+      width: 200,
+      renderer: function(value, meta, record) {
+        var parent = record.get('parent'),
+            id = record.get('id');
+        if (parent) {
+          return parent+'/<b>'+id+'</b>';
+        } else {
+          return '<b>'+id+'</b>';
+        }
+      }
+    },
     { text: 'Anmeldungen', dataIndex: 'count' },
     {
       xtype: 'datecolumn',
@@ -59,8 +72,10 @@ Ext.define('app.views.accountsgrid', {
         iconCls: 'x-fa fa-trash',
         tooltip: 'Löschen',
         handler: 'onAccountRemove',
-        },
-      ]
+        isDisabled: function (view, rowIndex, colIndex, item, record) {
+          return record.get('has_children');
+        }
+      }]
     },
   ],
   listeners: {

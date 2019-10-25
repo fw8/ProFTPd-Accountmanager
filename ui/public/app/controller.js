@@ -3,119 +3,29 @@ Ext.define('app.controller', {
 
   alias: 'controller.accounts',
 
-  onAdd: function (button, e, options) {
+  onAccountAdd: function (button, e, options) {
     var me = this, window,
         rootContainer = this.getView().up(),
         vm = this.getViewModel();
 
-    window = Ext.create('Ext.window.Window', {
-
-      title: 'Neuer Account',
-
-      width: 310,
-
-      layout: {
-        type: 'fit'
-      },
-
-      closable: false,
-      modal: true,
-
-      controller: 'accounts',
-
-      items: [
-        {
-          xtype: 'form',
-          bodyPadding: 5,
-
-          defaults: {
-            xtype: 'textfield',
-            anchor: '100%',
-            msgTarget: 'side',
-            labelWidth: 80
-          },
-
-          viewModel: {
-            stores: {
-              accounts: {
-                fields: [ { name: 'id' } ],
-                proxy: {
-                  type: 'ajax',
-                  url: '/accounts',
-                  reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                  },
-                },
-                autoLoad: true
-              },
-            },
-          },
-
-          items: [
-            {
-              name: 'id',
-              fieldLabel: 'Name',
-              allowBlank: false,
-              enableKeyEvents: true,
-              maskRe:/[0-9a-z_]/,    // no spaces, no special chars
-              // force uniq id
-              validator: function (fieldVal) {
-                var store = this.up().getViewModel().getStore('accounts');
-                i = store.findExact('id', fieldVal);
-                if (i < 0) {
-                  return true;
-                } else {
-                  return 'Account mit diesem Namen exisitiert bereits';
-                }
-              },
-            },
-            {
-              fieldLabel: 'Password',
-              name: 'passwd',
-              allowBlank: false,
-              maskRe:/[^ ]/,  // everything but blanks
-              inputType : 'password',
-            },
-          ]
-        }
-      ],
-      dockedItems: [
-        {
-          xtype: 'toolbar',
-          dock: 'bottom',
-          ui: 'footer',
-          layout: {
-            pack: 'end',
-            type: 'hbox'
-          },
-          items: [
-            {
-              xtype: 'button',
-              text: 'Speichern',
-              formBind: true,
-              listeners: {
-                click: 'onAddSave'
-              }
-            },
-            {
-              xtype: 'button',
-              text: 'Abbrechen',
-              listeners: {
-                click: function (button, e, options) {
-                  Ext.destroy(button.up('window'));
-                },
-              }
-            }
-          ]
-        }
-      ],
+    window = Ext.create('app.views.newaccountwindow', {
     });
 
     window.show();
   },
 
-  onAddSave: function (button, e, options) {
+  onSubAccountAdd: function (button, e, options) {
+    var me = this, window,
+        rootContainer = this.getView().up(),
+        vm = this.getViewModel();
+
+    window = Ext.create('app.views.newsubaccountwindow', {
+    });
+
+    window.show();
+  },
+
+  onAccountAddSave: function (button, e, options) {
     var window = button.up('window'),
         form = window.down('form'),
         values = form.getValues();
@@ -143,6 +53,7 @@ Ext.define('app.controller', {
 
     window.hide();
   },
+
 
   onAccountRemove: function(grid, rowIndex, colIndex) {
     var me = this,

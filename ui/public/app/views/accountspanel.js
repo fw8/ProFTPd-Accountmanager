@@ -24,9 +24,16 @@ Ext.define('app.views.accountspanel', {
       items: [
         {
           xtype: 'button',
-          text: 'Neu',
+          text: 'Neuen Account anlegen',
           listeners: {
-            click: 'onAdd'
+            click: 'onAccountAdd'
+          },
+        },
+        {
+          xtype: 'button',
+          text: 'Neuen Unteraccount anlegen',
+          listeners: {
+            click: 'onSubAccountAdd'
           },
         },
       ]

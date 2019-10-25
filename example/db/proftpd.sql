@@ -13,6 +13,7 @@ CREATE TABLE users (
   df BIGINT(20) NOT NULL DEFAULT '0',
   enabled BOOLEAN NOT NULL DEFAULT true,
   deleted BOOLEAN NOT NULL DEFAULT false,
+  parent VARCHAR(32),
   PRIMARY KEY (id)
 );
 CREATE INDEX users_id_idx ON users (id);
@@ -43,3 +44,4 @@ CREATE TABLE transfer_history (
   bytes BIGINT(20) NOT NULL,
   transfer_date DATETIME
 );
+CREATE INDEX transfer_history_id_idx ON transfer_history (id);

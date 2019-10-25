@@ -20,7 +20,17 @@ class AccountController
     // GET /accounts
     public function getall(Request $request, Response $response)
     {
-        $users = $this->db->query("SELECT id,enabled,count,last_accessed,du,df,deleted FROM users")->fetchAll();
+        $users = $this->db->query("SELECT id,enabled,count,last_accessed,du,df,deleted,parent FROM users")->fetchAll();
+
+        // enhance each user with a calculated field 'has_children'.
+        // set it to 'true' if there are any, 'false' otherwise.
+        foreach ($users as &$user) {
+            $stmt = $this->db->prepare("SELECT COUNT(*) AS count FROM users WHERE parent=:parent");
+            $stmt->execute(['parent' => $user['id']]);
+            $res = $stmt->fetch();
+            $user['has_children'] = ($res['count']>0) ? true : false;
+        }
+
         $response->getBody()->write(json_encode(['success' => true, 'data' => $users]));
         return $response->withHeader('Content-Type', 'application/json');
     }
@@ -30,10 +40,18 @@ class AccountController
     public function getone(Request $request, Response $response, array $args)
     {
         $id = filter_var($args['id'], FILTER_SANITIZE_STRING);
-        $stmt = $this->db->prepare("SELECT id,enabled,count,last_accessed,du,df,deleted FROM users WHERE id=:id");
+        $stmt = $this->db->prepare("SELECT id,enabled,count,last_accessed,du,df,deleted,parent FROM users WHERE id=:id");
         $stmt->execute(['id' => $id]);
-        $res = $stmt->fetchAll();
-        $response->getBody()->write(json_encode(['success' => true, 'data' => $res]));
+        $user = $stmt->fetch(); // just one expected!
+
+        // enhance user with a calculated field 'has_children'.
+        // set it to 'true' if there are any, 'false' otherwise.
+        $stmt = $this->db->prepare("SELECT COUNT(*) AS count FROM user WHERE parent=:parent");
+        $stmt->execute(['parent' => $id]);
+        $res = $stmt->fetch();
+        $user['has_children'] = ($res['count']>0) ? true : false;
+
+        $response->getBody()->write(json_encode(['success' => true, 'data' => [$user]]));
         return $response->withHeader('Content-Type', 'application/json');
     }
 
@@ -58,7 +76,7 @@ class AccountController
         $stmt = $this->db->prepare("SELECT COUNT(*) AS total FROM transfer_history WHERE id=:id");
         $stmt->execute(['id' => $id]);
         $res = $stmt->fetch();
-        $total = $res['total'];
+        $total = (int)$res['total'];
 
         $stmt = $this->db->prepare("SELECT * FROM transfer_history WHERE id=:id ORDER BY $sort_property $sort_direction LIMIT $limit OFFSET $start");
         $stmt->execute([ 'id' => $id ]);
@@ -73,15 +91,21 @@ class AccountController
     // Params (application/x-www-form-urlencoded):
     // id: xxx
     // passwd: yyy
+    // parent: zz (optional if this is a subaccount)
     public function create(Request $request, Response $response)
     {
         $data = $request->getParsedBody();
         $id = filter_var($data['id'], FILTER_SANITIZE_STRING);
         $passwd = filter_var($data['passwd'], FILTER_SANITIZE_STRING);
 
-        $homedir = $this->ftp_data_dir . '/' . $id;
-
-        $res = $this->db->prepare("INSERT INTO users (id, passwd, homedir) VALUES (:id,ENCRYPT(:passwd),:homedir)")->execute(['id' => $id, 'passwd' => $passwd, 'homedir' => $homedir]);
+        if (array_key_exists('parent', $data)) {
+            $parent = filter_var($data['parent'], FILTER_SANITIZE_STRING);
+            $homedir = $this->ftp_data_dir . '/' . $parent . '/' . $id;
+            $res = $this->db->prepare("INSERT INTO users (id, passwd, homedir, parent) VALUES (:id,ENCRYPT(:passwd),:homedir,:parent)")->execute(['id' => $id, 'passwd' => $passwd, 'homedir' => $homedir, 'parent' => $parent]);
+        } else {
+            $homedir = $this->ftp_data_dir . '/' . $id;
+            $res = $this->db->prepare("INSERT INTO users (id, passwd, homedir) VALUES (:id,ENCRYPT(:passwd),:homedir)")->execute(['id' => $id, 'passwd' => $passwd, 'homedir' => $homedir]);
+        }
 
         if ($res) {
             //$id = $this->db->lastInsertId();

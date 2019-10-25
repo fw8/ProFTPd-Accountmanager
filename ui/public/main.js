@@ -4,6 +4,8 @@ Ext.require([
   'app.views.accountspanel',
   'app.views.accountsgrid',
   'app.views.transferhistorygrid',
+  'app.views.newaccountwindow',
+  'app.views.newsubaccountwindow',
 ]);
 
 // Prototype to convert a number to a readable string respecting the new international standards.

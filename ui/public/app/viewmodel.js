@@ -14,10 +14,22 @@ Ext.define('app.viewmodel', {
         { name: 'du', type: 'int' },
         { name: 'df', type: 'int' },
         { name: 'deleted', type: 'bool' },
+        { name: 'parent' },
+        { name: 'has_children', type: 'bool' },
         { name: 'usage',
           type: 'float',
           convert: function(val,row) {
             return row.data.du / row.data.df;
+          }
+        },
+        { name: 'sortname',
+          type: 'string',
+          convert: function(val,row) {
+            if (row.data.parent) {
+              return row.data.parent+row.data.id;
+            } else {
+              return row.data.id+' '; // list parent always first
+            }
           }
         },
       ],
@@ -26,6 +38,10 @@ Ext.define('app.viewmodel', {
         value: false,
         operator: '=='
       },
+      sorters: [{
+        property: 'sortname',
+        direction: 'ASC'
+      }],
       proxy: {
         type: 'rest',
         url: '/accounts',
@@ -53,7 +69,6 @@ Ext.define('app.viewmodel', {
         { name: 'transfer_date', type: 'date', dateFormat: 'Y-m-d H:i:s' },
       ],
       buffered: true,
-      leadingBufferZone: 100,
       pageSize: 100,
       remoteSort: true,
       autoLoad: false,
