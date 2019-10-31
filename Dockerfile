@@ -1,3 +1,21 @@
+#
+# PHP Dependencies
+#
+FROM composer as vendor
+
+COPY ui/composer.json composer.json
+COPY ui/composer.lock composer.lock
+
+RUN composer install \
+    --ignore-platform-reqs \
+    --no-interaction \
+    --no-plugins \
+    --no-scripts \
+    --prefer-dist
+
+#
+# Application
+#
 FROM abiosoft/caddy:php-no-stats
 
 LABEL summary="ProFTPd Accountmanager" \
@@ -10,5 +28,7 @@ RUN apk update && \
     rm -rf /var/cache/apk/* /var/tmp/* /tmp/*
 
 COPY ui /ui
+
+COPY --from=vendor /app/vendor/ /ui/vendor/
 
 RUN chmod +x /ui/src/scripts/*.php
