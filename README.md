@@ -7,11 +7,10 @@ This is "work in progress"... It may not work as expected at the moment
 Run example:
 
     $ cd example
-    $ docker run --rm -it -v $PWD/../ui:/app composer install
-    $ docker-compose up
+    $ docker-compose up -d
 
 Open Browser on http://localhost
 
-Create new account
+Create a new account
 
-Login to new account with an sftp-client on <sftp://localhost:2222>
+Login to the new account with a sftp-client on <sftp://localhost:2222>
