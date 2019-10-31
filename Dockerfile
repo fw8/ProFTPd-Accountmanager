@@ -34,6 +34,6 @@ COPY crontab /etc/crontabs/root
 COPY ui /ui
 
 # Do not use debug code in production
-RUN sed -i 's/-debug//g' ui/public/index.html
+RUN sed -i 's/-debug//g' /ui/public/index.html
 
 RUN chmod +x /ui/src/scripts/*.php
