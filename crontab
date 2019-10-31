@@ -1,0 +1,3 @@
+# min   hour    day     month   weekday command
+*       *       *       *       *       php /ui/src/scripts/ds.php
+*       *       *       *       *       php /ui/src/scripts/gc.php

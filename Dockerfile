@@ -27,8 +27,10 @@ RUN apk update && \
     apk add --no-cache php7-ldap mariadb-client bash && \
     rm -rf /var/cache/apk/* /var/tmp/* /tmp/*
 
-COPY ui /ui
-
 COPY --from=vendor /app/vendor/ /ui/vendor/
+
+COPY crontab /etc/crontabs/root
+
+COPY ui /ui
 
 RUN chmod +x /ui/src/scripts/*.php
