@@ -214,5 +214,6 @@ Ext.define('app.controller', {
     var store = this.getViewModel().getStore('transfer_history');
     store.getProxy().url = '/accounts/'+rec.id+'/history/transfer';
     store.reload();
+    this.view.down('transferhistorygrid').setCollapsed(false);
   },
 });

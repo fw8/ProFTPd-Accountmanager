@@ -54,7 +54,7 @@ Ext.define('app.viewmodel', {
           writeAllFields: true
         },
       },
-      autoLoad: true,
+      autoLoad: false,
     },
 
     transfer_history: {
@@ -69,7 +69,6 @@ Ext.define('app.viewmodel', {
         { name: 'transfer_date', type: 'date', dateFormat: 'Y-m-d H:i:s' },
       ],
       buffered: true,
-      pageSize: 100,
       remoteSort: true,
       autoLoad: false,
       proxy: {

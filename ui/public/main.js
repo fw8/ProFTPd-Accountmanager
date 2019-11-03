@@ -1,7 +1,7 @@
 Ext.require([
   'app.controller',
   'app.viewmodel',
-  'app.views.accountspanel',
+  'app.views.mainview',
   'app.views.accountsgrid',
   'app.views.transferhistorygrid',
   'app.views.newaccountwindow',
@@ -23,18 +23,11 @@ Ext.application({
   appFolder: 'app',
 
   launch: function () {
-    main = Ext.create('Ext.container.Container', {
-      padding: '20 20 20 20',
-      plugins: 'viewport',
-
-      items: [{
-        xtype: 'accountspanel',
-      }]
-    });
+    main = Ext.create('app.views.mainview');
 
   // Reload store every minute
-  var accounts_store = main.down('accountspanel').getViewModel().getStore('accounts'),
-      transfer_store = main.down('accountspanel').getViewModel().getStore('transfer_history');
+  var accounts_store = main.getViewModel().getStore('accounts'),
+      transfer_store = main.getViewModel().getStore('transfer_history');
 
   var runner = new Ext.util.TaskRunner(),
     task = runner.start({

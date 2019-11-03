@@ -11,6 +11,8 @@ Ext.define('app.views.accountsgrid', {
     overItemCls: '',
   },
 
+  title: 'Accounts',
+
   columns: [
     {
       xtype: 'actioncolumn',
@@ -75,8 +77,30 @@ Ext.define('app.views.accountsgrid', {
         isDisabled: function (view, rowIndex, colIndex, item, record) {
           return record.get('has_children');
         }
-      }]
+      }],
     },
+  ],
+  dockedItems: [
+    {
+      xtype: 'toolbar',
+      dock: 'top',
+      items: [
+        {
+          xtype: 'button',
+          text: 'Neuen Account anlegen',
+          listeners: {
+            click: 'onAccountAdd'
+          },
+        },
+        {
+          xtype: 'button',
+          text: 'Neuen Unteraccount anlegen',
+          listeners: {
+            click: 'onSubAccountAdd'
+          },
+        },
+      ]
+    }
   ],
   listeners: {
     select: 'doLoadTransferHistory',

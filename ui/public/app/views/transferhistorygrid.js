@@ -6,8 +6,6 @@ Ext.define('app.views.transferhistorygrid', {
 
   bind: '{transfer_history}',
 
-  height: 400,
-  collapsible: true,
   loadMask: true,
 
   viewConfig: {
@@ -46,6 +44,6 @@ Ext.define('app.views.transferhistorygrid', {
     { text: 'Datei', dataIndex: 'filename', flex: 1 },
     { text: 'Größe', dataIndex: 'bytes', renderer: function(value, record){ return (value.fileSize(1)) }},
     { text: 'Protokol', dataIndex: 'protocol' },
-    { text: 'IP', dataIndex: 'client_ip' },
+    { text: 'Client-IP', dataIndex: 'client_ip' },
   ]
 });
