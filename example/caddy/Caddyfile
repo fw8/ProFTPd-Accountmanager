@@ -2,6 +2,8 @@
 gzip
 root /ui/public
 
+basicauth / admin admin
+
 fastcgi / 127.0.0.1:9000 php
 on startup php-fpm7
 

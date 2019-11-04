@@ -1,5 +1,7 @@
 # ProFTPd-Accountmanager
 
+![alt text](/screen.png "ProFTPd-Accountmanager UI")
+
 Simple Web-GUI to manage accounts for a ProFTPd-Server. There are two types of accounts:
 
 1) Normal accounts
@@ -16,13 +18,14 @@ The removal of the data takes place in a background job (the garbage collector) 
 **ATTENTION**
 This is "work in progress"... It may not work as expected at the moment
 
-
 Run example:
 
     $ cd example
     $ docker-compose up -d
 
 Open Browser on http://localhost
+
+Login with admin:admin
 
 Create a new account
 
