@@ -29,4 +29,4 @@ Login with admin:admin
 
 Create a new account
 
-Login to the new account with a sftp-client on <sftp://localhost:2222>
+Login to the new account with an sftp-client on <sftp://localhost:2222>

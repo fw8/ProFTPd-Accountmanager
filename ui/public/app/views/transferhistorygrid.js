@@ -43,7 +43,7 @@ Ext.define('app.views.transferhistorygrid', {
     },
     { text: 'Datei', dataIndex: 'filename', flex: 1 },
     { text: 'Größe', dataIndex: 'bytes', renderer: function(value, record){ return (value.fileSize(1)) }},
-    { text: 'Protokol', dataIndex: 'protocol' },
+    { text: 'Protokoll', dataIndex: 'protocol' },
     { text: 'Client-IP', dataIndex: 'client_ip' },
   ]
 });
