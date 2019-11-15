@@ -69,6 +69,11 @@ Ext.define('app.views.newaccountwindow', {
           maskRe:/[^ ]/,  // everything but blanks
           inputType : 'password',
         },
+        {
+          xtype: 'checkboxfield',
+          fieldLabel: 'Readonly',
+          name: 'readonly',
+        }
       ]
     }
   ],

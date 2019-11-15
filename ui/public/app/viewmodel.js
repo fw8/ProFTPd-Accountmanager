@@ -8,6 +8,7 @@ Ext.define('app.viewmodel', {
       storeId: 'accounts',
       fields: [
         { name: 'id' },
+        { name: 'readonly', type: 'boolean' },
         { name: 'enabled', type: 'boolean' },
         { name: 'count', type: 'int' },
         { name: 'last_accessed', type: 'date', dateFormat: 'Y-m-d H:i:s' },

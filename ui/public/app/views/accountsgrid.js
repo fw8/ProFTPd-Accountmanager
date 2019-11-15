@@ -20,14 +20,31 @@ Ext.define('app.views.accountsgrid', {
       align: 'center',
       //tooltip: 'Toggle Status',
       getTip:function( value, meta, rec ) {
-        return ((rec.get('enabled')) ? 'Sperren' : 'Aktivieren')
+        return ((rec.get('enabled')) ? 'Aktiv' : 'Gesperrt')
       },
       getClass: function (val, meta, rec) {
-        return ((rec.get('enabled')) ? 'x-fa fa-check-circle' : 'x-fa fa-times-circle')
+        return ((rec.get('enabled')) ? 'x-fa fa-check-circle-o' : 'x-fa fa-ban')
       },
       handler: function(grid, rowIndex, colIndex) {
         var rec = grid.getStore().getAt(rowIndex);
         rec.set('enabled', !rec.get('enabled'));
+        rec.store.sync();
+      },
+    },
+    {
+      xtype: 'actioncolumn',
+      text: "Rechte",
+      align: 'center',
+      //tooltip: 'Toggle Status',
+      getTip:function( value, meta, rec ) {
+        return ((rec.get('readonly')) ? 'Nur Lesen' : 'Lesen + Schreiben')
+      },
+      getClass: function (val, meta, rec) {
+        return ((rec.get('readonly')) ? 'x-fa fa-minus-circle' : 'x-fa fa-plus-circle')
+      },
+      handler: function(grid, rowIndex, colIndex) {
+        var rec = grid.getStore().getAt(rowIndex);
+        rec.set('readonly', !rec.get('readonly'));
         rec.store.sync();
       },
     },

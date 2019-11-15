@@ -30,6 +30,9 @@ Ext.define('app.controller', {
         form = window.down('form'),
         values = form.getValues();
 
+    // fix value from checkbox
+    values.readonly = (values.readonly) ? true : false;
+
     // get id and password from form fields
 
     if (form.isValid()) {

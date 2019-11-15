@@ -20,7 +20,7 @@ class AccountController
     // GET /accounts
     public function getall(Request $request, Response $response)
     {
-        $users = $this->db->query("SELECT id,enabled,count,last_accessed,du,df,deleted,parent FROM users")->fetchAll();
+        $users = $this->db->query("SELECT id,gid AS readonly,enabled,count,last_accessed,du,df,deleted,parent FROM users")->fetchAll();
 
         // enhance each user with a calculated field 'has_children'.
         // set it to 'true' if there are any, 'false' otherwise.
@@ -29,6 +29,9 @@ class AccountController
             $stmt->execute(['parent' => $user['id']]);
             $res = $stmt->fetch();
             $user['has_children'] = ($res['count']>0) ? true : false;
+
+            // Convert field "readonly" (gid) to bool: 1000 = false, 1001 = true
+            $user['readonly'] = ($user['readonly']==1001) ? true : false;
         }
 
         $response->getBody()->write(json_encode(['success' => true, 'data' => $users]));
@@ -40,7 +43,7 @@ class AccountController
     public function getone(Request $request, Response $response, array $args)
     {
         $id = filter_var($args['id'], FILTER_SANITIZE_STRING);
-        $stmt = $this->db->prepare("SELECT id,enabled,count,last_accessed,du,df,deleted,parent FROM users WHERE id=:id");
+        $stmt = $this->db->prepare("SELECT id,gid AS readonly,enabled,count,last_accessed,du,df,deleted,parent FROM users WHERE id=:id");
         $stmt->execute(['id' => $id]);
         $user = $stmt->fetch(); // just one expected!
 
@@ -50,6 +53,9 @@ class AccountController
         $stmt->execute(['parent' => $id]);
         $res = $stmt->fetch();
         $user['has_children'] = ($res['count']>0) ? true : false;
+
+        // Convert field "readonly" (gid) to bool: 1000 = false, 1001 = true
+        $user['readonly'] = ($user['readonly']==1001) ? true : false;
 
         $response->getBody()->write(json_encode(['success' => true, 'data' => [$user]]));
         return $response->withHeader('Content-Type', 'application/json');
@@ -97,14 +103,17 @@ class AccountController
         $data = $request->getParsedBody();
         $id = filter_var($data['id'], FILTER_SANITIZE_STRING);
         $passwd = filter_var($data['passwd'], FILTER_SANITIZE_STRING);
+        $readonly = filter_var($data['readonly'], FILTER_VALIDATE_BOOLEAN);
+
+        $gid = ($readonly) ? 1001 : 1000;
 
         if (array_key_exists('parent', $data)) {
             $parent = filter_var($data['parent'], FILTER_SANITIZE_STRING);
             $homedir = $this->ftp_data_dir . '/' . $parent . '/' . $id;
-            $res = $this->db->prepare("INSERT INTO users (id, passwd, homedir, parent) VALUES (:id,ENCRYPT(:passwd),:homedir,:parent)")->execute(['id' => $id, 'passwd' => $passwd, 'homedir' => $homedir, 'parent' => $parent]);
+            $res = $this->db->prepare("INSERT INTO users (id, gid, passwd, homedir, parent) VALUES (:id,:gid,ENCRYPT(:passwd),:homedir,:parent)")->execute(['id' => $id, 'gid' => $gid, 'passwd' => $passwd, 'homedir' => $homedir, 'parent' => $parent]);
         } else {
             $homedir = $this->ftp_data_dir . '/' . $id;
-            $res = $this->db->prepare("INSERT INTO users (id, passwd, homedir) VALUES (:id,ENCRYPT(:passwd),:homedir)")->execute(['id' => $id, 'passwd' => $passwd, 'homedir' => $homedir]);
+            $res = $this->db->prepare("INSERT INTO users (id, gid, passwd, homedir) VALUES (:id,:gid,ENCRYPT(:passwd),:homedir)")->execute(['id' => $id, 'gid' => $gid, 'passwd' => $passwd, 'homedir' => $homedir]);
         }
 
         if ($res) {
@@ -130,11 +139,13 @@ class AccountController
         $data = json_decode($request->getBody()->getContents(), true);
         $enabled = filter_var($data['enabled'], FILTER_VALIDATE_BOOLEAN);
         $deleted = filter_var($data['deleted'], FILTER_VALIDATE_BOOLEAN);
+        $readonly = filter_var($data['readonly'], FILTER_VALIDATE_BOOLEAN);
 
         $enabled = ($enabled) ? 1 : 0;
         $deleted = ($deleted) ? 1 : 0;
+        $gid = ($readonly) ? 1001 : 1000;
 
-        $res = $this->db->prepare("UPDATE users SET enabled=:enabled, deleted=:deleted WHERE id=:id")->execute(['enabled' => $enabled, 'deleted' => $deleted, 'id' => $id]);
+        $res = $this->db->prepare("UPDATE users SET enabled=:enabled, deleted=:deleted, gid=:gid WHERE id=:id")->execute(['enabled' => $enabled, 'deleted' => $deleted, 'gid' => $gid, 'id' => $id]);
 
         if ($res) {
             $response->getBody()->write(json_encode(['success' => true, 'data' => $data]));

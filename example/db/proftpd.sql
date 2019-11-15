@@ -24,8 +24,8 @@ CREATE TABLE groups (
   members VARCHAR(255) NOT NULL DEFAULT ''
 );
 CREATE INDEX groups_gid_idx ON groups (gid);
-INSERT INTO groups (groupname, gid, members) VALUES ('nogroup', 1000, '');
-
+INSERT INTO groups (groupname, gid, members) VALUES ('rw', 1000, '');
+INSERT INTO groups (groupname, gid, members) VALUES ('ro', 1001, '');
 
 CREATE TABLE login_history (
   id VARCHAR(32) NOT NULL,

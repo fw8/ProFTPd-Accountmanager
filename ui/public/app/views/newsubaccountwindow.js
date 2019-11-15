@@ -97,6 +97,11 @@ Ext.define('app.views.newsubaccountwindow', {
           maskRe:/[^ ]/,  // everything but blanks
           inputType : 'password',
         },
+        {
+          xtype: 'checkboxfield',
+          fieldLabel: 'Readonly',
+          name: 'readonly',
+        }
       ]
     }
   ],
