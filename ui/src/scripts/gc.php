@@ -27,3 +27,5 @@ foreach($res as $row) {
   $res = $pdo->prepare("DELETE FROM transfer_history WHERE id=:id")->execute(['id' => $id]);
 }
 
+# Cleanup history after 60 days
+$res = $pdo->query("DELETE FROM transfer_history where DATEDIFF(NOW(),transfer_date) > 60");
