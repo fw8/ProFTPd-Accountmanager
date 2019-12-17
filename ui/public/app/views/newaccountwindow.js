@@ -50,7 +50,7 @@ Ext.define('app.views.newaccountwindow', {
           fieldLabel: 'Name',
           allowBlank: false,
           enableKeyEvents: true,
-          maskRe:/[0-9a-z_]/,    // no spaces, no special chars
+          maskRe:/[0-9A-Za-z_]/,    // no spaces, no special chars
           // force uniq id
           validator: function (fieldVal) {
             var store = this.up().getViewModel().getStore('accounts');
