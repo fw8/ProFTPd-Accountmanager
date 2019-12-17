@@ -51,7 +51,7 @@ Ext.define('app.views.accountsgrid', {
     {
       text: 'Account',
       dataIndex: 'sortname',
-      width: 200,
+      width: 250,
       renderer: function(value, meta, record) {
         var parent = record.get('parent'),
             id = record.get('id');
